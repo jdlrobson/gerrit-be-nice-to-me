@@ -1,6 +1,6 @@
 ( function( $ ) {
 
-function silentJenkins( $commentPanel ) {
+function silentNoise( $commentPanel ) {
 	$commentPanel.css( 'opacity', 0.2 ); // makes jenkins comments less prominent
 	$commentPanel.on( 'click', function() {
 		$( this ).css( 'opacity', '' );
@@ -8,11 +8,15 @@ function silentJenkins( $commentPanel ) {
 }
 
 function listener( ev ) {
-	var $t = $( ev.target ), $owner, author;
+	var $t = $( ev.target ), $owner, author, action;
 	if ( $t.hasClass( 'commentPanel' ) ) { // force open comment panel
 		author = $t.find( '.commentPanelAuthorCell' ).text();
-		if ( author === 'jenkins-bot' ) {
-			silentJenkins( $t );
+		action = $t.find( '.commentPanelSummary' ).text();
+		console.log( action );
+		if ( author === 'jenkins-bot' ||
+			action.indexOf( 'Uploaded patch set' ) === 0  ||
+			action.match( /was rebased$/ ) ) {
+			silentNoise( $t );
 		} else {
 			$t.find( '.commentPanelContent' ).show();
 		}
