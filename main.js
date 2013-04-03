@@ -7,6 +7,25 @@ function silentNoise( $commentPanel ) {
 	} );
 }
 
+function colorComment( $commentPanel ) {
+	var heading = $commentPanel.find( '.commentPanelMessage p' ).eq( 0 ).text(),
+		color = '#aaa';
+	if ( heading.match( /Code\-Review\-2$/ ) ) {
+		color = '#C90505';
+	} else if ( heading.match( /Code\-Review\-1$/ ) ) {
+		color = 'red';
+	} else if ( heading.match( /Code\-Review\+1$/ ) ) {
+		color = 'yellow';
+	} else if ( heading.match( /Code\-Review\+2$/ ) ) {
+		color = 'green';
+	}
+	$commentPanel.css( {
+		'border-left': 'solid 10px ' + color,
+		'border-top-left-radius': 0,
+		'border-bottom-left-radius': 0
+	} );
+}
+
 function listener( ev ) {
 	var $t = $( ev.target ), $owner, author, action;
 	if ( $t.hasClass( 'commentPanel' ) ) { // force open comment panel
@@ -19,6 +38,7 @@ function listener( ev ) {
 		} else {
 			$t.find( '.commentPanelContent' ).show();
 		}
+		colorComment( $t );
 	} else if ( $t.hasClass( 'gwt-DisclosurePanel' ) ) { // open patchset
 		$( '.gwt-DisclosurePanel-closed tbody tr' ).trigger( 'click' ); // HACK! not optimal
 	} else if ( $t.children( '.changeTable' ).length > 0 ) {
