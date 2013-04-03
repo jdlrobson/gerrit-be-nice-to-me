@@ -12,7 +12,6 @@ function listener( ev ) {
 	if ( $t.hasClass( 'commentPanel' ) ) { // force open comment panel
 		author = $t.find( '.commentPanelAuthorCell' ).text();
 		action = $t.find( '.commentPanelSummary' ).text();
-		console.log( action );
 		if ( author === 'jenkins-bot' ||
 			action.indexOf( 'Uploaded patch set' ) === 0  ||
 			action.match( /was rebased$/ ) ) {
