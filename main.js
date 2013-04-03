@@ -1,9 +1,21 @@
 ( function( $ ) {
 
+function silentJenkins( $commentPanel ) {
+	$commentPanel.css( 'opacity', 0.2 ); // makes jenkins comments less prominent
+	$commentPanel.on( 'click', function() {
+		$( this ).css( 'opacity', '' );
+	} );
+}
+
 function listener( ev ) {
-	var $t = $( ev.target ), $owner;
+	var $t = $( ev.target ), $owner, author;
 	if ( $t.hasClass( 'commentPanel' ) ) { // force open comment panel
-		$t.find( '.commentPanelContent' ).show();
+		author = $t.find( '.commentPanelAuthorCell' ).text();
+		if ( author === 'jenkins-bot' ) {
+			silentJenkins( $t );
+		} else {
+			$t.find( '.commentPanelContent' ).show();
+		}
 	} else if ( $t.hasClass( 'gwt-DisclosurePanel' ) ) { // open patchset
 		$( '.gwt-DisclosurePanel-closed tbody tr' ).trigger( 'click' ); // HACK! not optimal
 	} else if ( $t.children( '.changeTable' ).length > 0 ) {
