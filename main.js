@@ -10,9 +10,9 @@ function silentNoise( $commentPanel ) {
 function colorComment( $commentPanel ) {
 	var heading = $commentPanel.find( '.commentPanelMessage p' ).eq( 0 ).text(),
 		color = '#aaa';
-	if ( heading.match( /Code\-Review\-2$/ ) ) {
+	if ( heading.match( /Code\-Review\-2$/ ) || heading.match( /Verified\-2$/ ) ) {
 		color = '#C90505';
-	} else if ( heading.match( /Code\-Review\-1$/ ) ) {
+	} else if ( heading.match( /Code\-Review\-1$/ ) || heading.match( /Verified\-1$/ ) ) {
 		color = 'red';
 	} else if ( heading.match( /Code\-Review\+1$/ ) ) {
 		color = 'yellow';
