@@ -52,6 +52,30 @@ function listener( ev ) {
 		$( '<a class="downloadLink">' ).text( comments + ' comments' ).
 			appendTo( $owner.find( 'tr' ).eq( 0 ).find( 'td' ).eq( 2 ) );
 		$owner.find( 'tbody tr' ).trigger( 'click' );
+	} else if ( $t.hasClass( 'gwt-Image' ) ) {
+		// hacky way of detecting page load on my reviews page
+		if ( $t.attr( 'src' ) === 'https://gerrit.wikimedia.org/r/gerrit_ui/clear.cache.gif' ) {
+
+			// change the style of all rows to reflect the patchset current score
+			$( '.changeTable tr' ).each( function() {
+				var color, className;
+				if ( $( this ).find( '.posscore' ).length > 0 ) {
+					className = 'posscore';
+					color = '#08a400';
+				} else if ( $( this ).find( '.negscore' ).length > 0 ) {
+					className = 'negscore';
+					color = 'red';
+				} else {
+					className = false;
+				}
+				if ( className ) {
+					$( this ).find( 'td' ).each( function() {
+						$( this ).addClass( className + ' dataCell' ).
+							find( 'a' ).attr( 'style', 'color: ' + color + ' !important;' ); // ergg WHY GERRIT WHY?!!
+					} );
+				}
+			} );
+		}
 	}
 }
 document.addEventListener( 'DOMNodeInserted', listener, false );
