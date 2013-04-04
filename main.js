@@ -1,12 +1,5 @@
 ( function( $ ) {
 
-function silentNoise( $commentPanel ) {
-	$commentPanel.css( 'opacity', 0.2 ); // makes jenkins comments less prominent
-	$commentPanel.on( 'click', function() {
-		$( this ).css( 'opacity', '' );
-	} );
-}
-
 function colorComment( $commentPanel ) {
 	var heading = $commentPanel.find( '.commentPanelMessage p' ).eq( 0 ).text(),
 		color = '#aaa';
@@ -34,7 +27,8 @@ function listener( ev ) {
 		if ( author === 'jenkins-bot' ||
 			action.indexOf( 'Uploaded patch set' ) === 0  ||
 			action.match( /was rebased$/ ) ) {
-			silentNoise( $t );
+			 // make jenkins comments less prominent
+			$t.find( '.commentPanelHeader' ).css( 'opacity', 0.6 );
 		} else {
 			$t.find( '.commentPanelContent' ).show();
 		}
