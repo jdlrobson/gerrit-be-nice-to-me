@@ -59,8 +59,7 @@ function listener( ev ) {
 			// change the style of all rows to reflect the patchset current score
 			$( '.changeTable tr' ).each( function() {
 				var color, className;
-				// an x is sometimes signalled by an image rather than a useful class name hence latter selector
-				if ( $( this ).find( '.negscore.singleLine, .cAPPROVAL .gwt-Image' ).length > 0 ) {
+				if ( $( this ).find( '.negscore.singleLine' ).length > 0 ) {
 					className = 'negscore';
 					color = 'red';
 				} else if ( $( this ).find( '.posscore.singleLine' ).length === 2 ) {
