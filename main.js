@@ -71,8 +71,10 @@ function listener( ev ) {
 				}
 				if ( className ) {
 					$( this ).find( 'td' ).each( function() {
-						$( this ).addClass( className + ' dataCell' ).
-							find( 'a' ).attr( 'style', 'color: ' + color + ' !important;' ); // ergg WHY GERRIT WHY?!!
+						if ( !$( this ).hasClass( 'iconCell' ) ) {
+							$( this ).addClass( className + ' dataCell' ).
+								find( 'a' ).attr( 'style', 'color: ' + color + ' !important;' ); // ergg WHY GERRIT WHY?!!
+						}
 					} );
 				}
 			} );
