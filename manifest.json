@@ -3,7 +3,7 @@
 
 	"name": "Gerrit be nice to me",
 	"description": "This makes gerrit ui a little nicer",
-	"version": "1.0",
+	"version": "1.0.1",
 	"permissions": [
 		"webRequest", "*://gerrit.wikimedia.org/*"
 	],

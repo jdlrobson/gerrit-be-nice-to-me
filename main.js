@@ -20,7 +20,9 @@ function colorComment( $commentPanel ) {
 }
 
 function listener( ev ) {
-	var $t = $( ev.target ), $owner, author, action;
+	var icon, style,
+		$t = $( ev.target ), $owner, author, action;
+
 	if ( $t.hasClass( 'commentPanel' ) ) { // force open comment panel
 		author = $t.find( '.commentPanelAuthorCell' ).text();
 		action = $t.find( '.commentPanelSummary' ).text();
@@ -59,14 +61,29 @@ function listener( ev ) {
 			// change the style of all rows to reflect the patchset current score
 			$( '.changeTable tr' ).each( function() {
 				var color, className;
+				// Any negative score make it red
 				if ( $( this ).find( '.negscore.singleLine' ).length > 0 ) {
 					className = 'negscore';
 					color = 'red';
-				} else if ( $( this ).find( '.posscore.singleLine' ).length === 2 ) {
-					className = 'posscore';
-					color = '#08a400';
 				} else {
 					className = false;
+					icon = $( this ).find( '.cAPPROVAL .gwt-Image' );
+					if ( icon && icon.attr( 'style' ) ) {
+						// omg forgive me. Relying on data uri to tell if an X is present
+						if ( icon.attr( 'style' ).indexOf( 'IStCjmuQs0GGgTSCDMSwFWQazBayEgndAQAqW6dvdnJ0RwAAAABJRU' ) > -1 ) {
+							className = 'negscore';
+							color = 'red';
+						// check for 2 images now knowing that neither is an X
+						} else if (
+							// two ticks
+							$( this ).find( '.cAPPROVAL .gwt-Image' ).length === 2 ||
+							// one tick and a +1
+							( $( this ).find( '.cAPPROVAL .gwt-Image' ).length === 1 &&
+								$( this ).find( '.posscore.singleLine' ).length === 1 ) ) {
+							className = 'posscore';
+							color = '#08a400';
+						}
+					}
 				}
 				if ( className ) {
 					$( this ).find( 'td' ).each( function() {
