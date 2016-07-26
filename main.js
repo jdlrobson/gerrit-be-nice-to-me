@@ -19,6 +19,45 @@ function colorComment( $commentPanel ) {
 	} );
 }
 
+function updateReviewList() {
+	// change the style of all rows to reflect the patchset current score
+	$( '.changeTable tr' ).each( function() {
+		var color, className;
+		// Any negative score make it red
+		if ( $( this ).find( '.negscore.singleLine' ).length > 0 ) {
+			className = 'negscore';
+			color = 'red';
+		} else {
+			className = false;
+			icon = $( this ).find( '.cAPPROVAL .gwt-Image' );
+			if ( icon && icon.attr( 'style' ) ) {
+				// omg forgive me. Relying on data uri to tell if an X is present
+				if ( icon.attr( 'style' ).indexOf( 'IStCjmuQs0GGgTSCDMSwFWQazBayEgndAQAqW6dvdnJ0RwAAAABJRU' ) > -1 ) {
+					className = 'negscore';
+					color = 'red';
+				// check for 2 images now knowing that neither is an X
+				} else if (
+					// two ticks
+					$( this ).find( '.cAPPROVAL .gwt-Image' ).length === 2 ||
+					// one tick and a +1
+					( $( this ).find( '.cAPPROVAL .gwt-Image' ).length === 1 &&
+						$( this ).find( '.posscore.singleLine' ).length === 1 ) ) {
+					className = 'posscore';
+					color = '#08a400';
+				}
+			}
+		}
+		if ( className ) {
+			$( this ).find( 'td' ).each( function() {
+				if ( !$( this ).hasClass( 'iconCell' ) ) {
+					$( this ).addClass( className + ' dataCell' ).
+						find( 'a' ).attr( 'style', 'color: ' + color + ' !important;' ); // ergg WHY GERRIT WHY?!!
+				}
+			} );
+		}
+	} );
+}
+
 function listener( ev ) {
 	var icon, style,
 		$t = $( ev.target ), $owner, author, action;
@@ -55,45 +94,14 @@ function listener( ev ) {
 			appendTo( $owner.find( 'tr' ).eq( 0 ).find( 'td' ).eq( 2 ) );
 		$owner.find( 'tbody tr' ).trigger( 'click' );
 	} else if ( $t.hasClass( 'gwt-Image' ) ) {
+		var dataUri = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAJCAYAAAAGuM1UAAAAJElEQVR42mNgwAT/GUgE/0nV9J9UTf9J1fSfVE0U2UC7UMIJAG5zGOglYYULAAAAAElFTkSuQmCC';
+		var remoteUri = 'https://gerrit.wikimedia.org/r/gerrit_ui/clear.cache.gif';
+		var src = $t.attr( 'src' );
 		// hacky way of detecting page load on my reviews page
-		if ( $t.attr( 'src' ) === 'https://gerrit.wikimedia.org/r/gerrit_ui/clear.cache.gif' ) {
-
-			// change the style of all rows to reflect the patchset current score
-			$( '.changeTable tr' ).each( function() {
-				var color, className;
-				// Any negative score make it red
-				if ( $( this ).find( '.negscore.singleLine' ).length > 0 ) {
-					className = 'negscore';
-					color = 'red';
-				} else {
-					className = false;
-					icon = $( this ).find( '.cAPPROVAL .gwt-Image' );
-					if ( icon && icon.attr( 'style' ) ) {
-						// omg forgive me. Relying on data uri to tell if an X is present
-						if ( icon.attr( 'style' ).indexOf( 'IStCjmuQs0GGgTSCDMSwFWQazBayEgndAQAqW6dvdnJ0RwAAAABJRU' ) > -1 ) {
-							className = 'negscore';
-							color = 'red';
-						// check for 2 images now knowing that neither is an X
-						} else if (
-							// two ticks
-							$( this ).find( '.cAPPROVAL .gwt-Image' ).length === 2 ||
-							// one tick and a +1
-							( $( this ).find( '.cAPPROVAL .gwt-Image' ).length === 1 &&
-								$( this ).find( '.posscore.singleLine' ).length === 1 ) ) {
-							className = 'posscore';
-							color = '#08a400';
-						}
-					}
-				}
-				if ( className ) {
-					$( this ).find( 'td' ).each( function() {
-						if ( !$( this ).hasClass( 'iconCell' ) ) {
-							$( this ).addClass( className + ' dataCell' ).
-								find( 'a' ).attr( 'style', 'color: ' + color + ' !important;' ); // ergg WHY GERRIT WHY?!!
-						}
-					} );
-				}
-			} );
+		// the icon to the left of the review load is the last thing loaded.
+		// In Gerrit versions it could either be a gif of a data uri
+		if ( src === remoteUri || src === dataUri ) {
+			updateReviewList();
 		}
 	}
 }
