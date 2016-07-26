@@ -1,15 +1,18 @@
 ( function( $ ) {
 
 function colorComment( $commentPanel ) {
-	var heading = $commentPanel.find( '.commentPanelMessage p' ).eq( 0 ).text(),
+	var heading = $commentPanel.find( '.commentPanelMessage p' ).eq( 0 ).text()
+		// for newer gerrit versions
+		|| $commentPanel.find( '.com-google-gerrit-client-change-Message_BinderImpl_GenCss_style-summary' ).text(),
 		color = '#aaa';
-	if ( heading.match( /Code\-Review\-2$/ ) || heading.match( /Verified\-2$/ ) ) {
+
+	if ( heading.match( /Code\-Review\-2[$\n]/ ) || heading.match( /Verified\-2[$\n]/ ) ) {
 		color = '#C90505';
-	} else if ( heading.match( /Code\-Review\-1$/ ) || heading.match( /Verified\-1$/ ) ) {
+	} else if ( heading.match( /Code\-Review\-1[$\n]/ ) || heading.match( /Verified\-1[$\n]/ ) ) {
 		color = 'red';
-	} else if ( heading.match( /Code\-Review\+1$/ ) ) {
+	} else if ( heading.match( /Code\-Review\+1[$\n]/ ) ) {
 		color = 'yellow';
-	} else if ( heading.match( /Code\-Review\+2$/ ) ) {
+	} else if ( heading.match( /Code\-Review\+2[$\n]/ ) ) {
 		color = 'green';
 	}
 	$commentPanel.css( {
@@ -62,7 +65,9 @@ function listener( ev ) {
 	var icon, style,
 		$t = $( ev.target ), $owner, author, action;
 
-	if ( $t.hasClass( 'commentPanel' ) ) { // force open comment panel
+	if ( $t.hasClass( 'com-google-gerrit-client-change-Message_BinderImpl_GenCss_style-messageBox' ) ) {
+		colorComment( $t );
+	} else if ( $t.hasClass( 'commentPanel' ) ) { // force open comment panel
 		author = $t.find( '.commentPanelAuthorCell' ).text();
 		action = $t.find( '.commentPanelSummary' ).text();
 		if ( author === 'jenkins-bot' ||
